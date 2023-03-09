@@ -8,11 +8,11 @@ plugins {
 }
 
 android {
-    namespace = AppConfig.applicationId
+    namespace = AppConfig.namespace
     compileSdk = AppConfig.compileSdk
 
     defaultConfig {
-        applicationId = AppConfig.applicationId
+        applicationId = AppConfig.namespace
         minSdk = AppConfig.minSdk
         targetSdk = AppConfig.targetSdk
         versionCode = AppConfig.versionCode
@@ -42,7 +42,7 @@ android {
             isShrinkResources = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
             signingConfig = signingConfigs.getByName("debug")
         }
@@ -51,7 +51,7 @@ android {
             isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
             signingConfig = signingConfigs.getByName("release")
         }
@@ -73,12 +73,13 @@ android {
 
         // Enable Coroutines and Flow APIs
         freeCompilerArgs = freeCompilerArgs +
-                "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi" +
-                "-opt-in=kotlinx.coroutines.FlowPreview" +
-                "-opt-in=com.google.accompanist.pager.ExperimentalPagerApi" +
-                "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi" +
-                "-opt-in=androidx.compose.material.ExperimentalMaterialApi" +
-                "-opt-in=androidx.compose.animation.ExperimentalAnimationApi"
+            "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi" +
+            "-opt-in=kotlinx.coroutines.FlowPreview" +
+            "-opt-in=com.google.accompanist.pager.ExperimentalPagerApi" +
+            "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi" +
+            "-opt-in=androidx.compose.material.ExperimentalMaterialApi" +
+            "-opt-in=androidx.compose.animation.ExperimentalAnimationApi" +
+            "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api"
     }
 
     buildFeatures {

@@ -1,5 +1,5 @@
 object AppConfig {
-    const val applicationId = "com.dirzaaulia.smartphonespec"
+    const val namespace = "com.dirzaaulia.smartphonespec"
     const val compileSdk = 33
     const val minSdk = 26
     const val targetSdk = 33
