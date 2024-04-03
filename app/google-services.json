@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "356386135994",
+    "project_id": "drz-formula-one",
+    "storage_bucket": "drz-formula-one.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:356386135994:android:e57f9fe5e5c80fddb14783",
+        "android_client_info": {
+          "package_name": "com.dirzaaulia.formulaone"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMihkPBb-m9kX-mXTgVqZpwEvvedmIBuQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:356386135994:android:e57f9fe5e5c80fddb14783",
+        "android_client_info": {
+          "package_name": "com.dirzaaulia.formulaone.demo.debug"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMihkPBb-m9kX-mXTgVqZpwEvvedmIBuQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

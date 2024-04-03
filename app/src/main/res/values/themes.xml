@@ -1,23 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <!-- Splash Screen Theme -->
-    <style name="Theme.SmartphoneSpec.SplashScreen" parent="Theme.SplashScreen">
-        <!-- Set the splash screen background, animated icon, and animation duration. -->
-        <item name="windowSplashScreenBackground">#424242</item>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
-        <!-- Use windowSplashScreenAnimatedIcon to add either a drawable or an
-             animated drawable. One of these is required. -->
+    <!-- Allows us to override night specific attributes in the
+         values-night folder. -->
+    <style name="NightAdjusted.Theme.FormulaOne" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <!-- The final theme we use -->
+    <style name="Theme.FormulaOne" parent="NightAdjusted.Theme.FormulaOne" />
+
+    <style name="NightAdjusted.Theme.Splash" parent="Theme.SplashScreen">
+        <item name="android:windowLightStatusBar" >true</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
+    </style>
+
+    <style name="Theme.FormulaOne.Splash" parent="NightAdjusted.Theme.Splash">
         <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
-        <!-- Required for animated icons -->
-        <item name="windowSplashScreenAnimationDuration">1000</item>
-
-        <!-- Set the theme of the Activity that directly follows your splash screen. -->
-        <!-- Required -->
-        <item name="postSplashScreenTheme">@style/Theme.Countries</item>
+        <item name="postSplashScreenTheme">@style/Theme.FormulaOne</item>
     </style>
 
-    <style name="Theme.Countries" parent="Theme.Material3.DynamicColors.DayNight">
-        <item name="android:statusBarColor">@color/immersive_sys_ui</item>
-        <item name="android:navigationBarColor">@color/nav_bar</item>\
-    </style>
 </resources>

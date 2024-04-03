@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">Smartphone Spec</string>
+    <string name="app_name">All About F1</string>
+    <string name="not_connected">⚠️ You aren’t connected to the internet</string>
 </resources>

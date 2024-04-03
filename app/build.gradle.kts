@@ -1,143 +1,120 @@
+import com.dirzaaulia.formula1.FormulaOneBuildType
+
 plugins {
-    id("com.android.application")
-    kotlin("android")
-    kotlin("kapt")
-    id("kotlin-parcelize")
-    id("dagger.hilt.android.plugin")
-    id("com.diffplug.spotless")
+    alias(libs.plugins.formulaone.android.application)
+    alias(libs.plugins.formulaone.android.application.compose)
+    alias(libs.plugins.formulaone.android.application.flavors)
+    alias(libs.plugins.formulaone.android.application.jacoco)
+    alias(libs.plugins.formulaone.android.hilt)
+    id("jacoco")
+    alias(libs.plugins.formulaone.android.application.firebase)
+    id("com.google.android.gms.oss-licenses-plugin")
+    alias(libs.plugins.baselineprofile)
+    alias(libs.plugins.roborazzi)
+    alias(libs.plugins.kotlinAndroid)
 }
 
 android {
-    namespace = AppConfig.namespace
-    compileSdk = AppConfig.compileSdk
-
     defaultConfig {
-        applicationId = AppConfig.namespace
-        minSdk = AppConfig.minSdk
-        targetSdk = AppConfig.targetSdk
-        versionCode = AppConfig.versionCode
-        versionName = AppConfig.versionName
-        vectorDrawables.useSupportLibrary = true
-        testInstrumentationRunner = AppConfig.testInstrumentationRunner
-    }
+        applicationId = "com.dirzaaulia.formulaone"
+        versionCode = 1
+        versionName = "0.0.1" // X.Y.Z; X = Major, Y = minor, Z = Patch level
 
-    signingConfigs {
-        getByName("debug") {
-//            storeFile = file("D:\\AndroidStudio\\Keystore\\keystore.jks")
-//            storePassword = AppConfig.KeyStore.password
-//            keyAlias = AppConfig.KeyStore.alias
-//            keyPassword = AppConfig.KeyStore.password
-        }
-        create("release") {
-//            storeFile = file("D:\\AndroidStudio\\Keystore\\keystore.jks")
-//            storePassword = AppConfig.KeyStore.password
-//            keyAlias = AppConfig.KeyStore.alias
-//            keyPassword = AppConfig.KeyStore.password
+        // Custom test runner to set up Hilt dependency graph
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables {
+            useSupportLibrary = true
         }
     }
 
     buildTypes {
-        getByName("debug") {
-            isMinifyEnabled = false
-            isShrinkResources = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro",
-            )
-            signingConfig = signingConfigs.getByName("debug")
+        debug {
+            applicationIdSuffix = FormulaOneBuildType.DEBUG.applicationIdSuffix
         }
-        getByName("release") {
+        val release = getByName("release") {
             isMinifyEnabled = true
-            isShrinkResources = true
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro",
-            )
-            signingConfig = signingConfigs.getByName("release")
+            applicationIdSuffix = FormulaOneBuildType.RELEASE.applicationIdSuffix
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+
+            // To publish on the Play store a private signing key is required, but to allow anyone
+            // who clones the code to sign and run the release variant, use the debug signing key.
+            // TODO: Abstract the signing configuration to a separate file to avoid hardcoding this.
+            signingConfig = signingConfigs.getByName("debug")
+            // Ensure Baseline Profile is fresh for release builds.
+            baselineProfile.automaticGenerationDuringBuild = true
         }
     }
 
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-
-    kotlin {
-        jvmToolchain {
-            this.languageVersion.set(JavaLanguageVersion.of(11))
-        }
-    }
-
-    kotlinOptions {
-        jvmTarget = "11"
-
-        // Enable Coroutines and Flow APIs
-        freeCompilerArgs = freeCompilerArgs +
-            "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi" +
-            "-opt-in=kotlinx.coroutines.FlowPreview" +
-            "-opt-in=com.google.accompanist.pager.ExperimentalPagerApi" +
-            "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi" +
-            "-opt-in=androidx.compose.material.ExperimentalMaterialApi" +
-            "-opt-in=androidx.compose.animation.ExperimentalAnimationApi" +
-            "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api"
-    }
-
-    buildFeatures {
-        compose = true
-        // Disable unused AGP features
-        buildConfig = false
-        aidl = false
-        renderScript = false
-        resValues = false
-        shaders = false
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = Version.composeCompiler
-    }
-
-    packagingOptions {
+    packaging {
         resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes.add("/META-INF/{AL2.0,LGPL2.1}")
         }
     }
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+        }
+    }
+    namespace = "com.dirzaaulia.formulaone"
 }
 
 dependencies {
-    // Implementation
-    implementation(Dependencies.Accompanist.implementation)
-    implementation(Dependencies.AndroidX.implementation)
-    implementation(Dependencies.AndroidX.Compose.implementation)
-    implementation(Dependencies.AndroidX.Lifecycle.implementation)
-    implementation(Dependencies.Coil.implementation)
-    implementation(Dependencies.Coroutines.implementation)
-    implementation(Dependencies.Hilt.implementation)
-    implementation(Dependencies.Kotlin.implementation)
-    implementation(Dependencies.Material.implementation)
-    implementation(Dependencies.Other.implementation)
-    implementation(Dependencies.Paging.implementation)
-    implementation(Dependencies.SquareUp.implementation)
+    implementation(projects.feature.home)
+    implementation(projects.feature.settings)
 
-    // Kapt
-    kapt(Dependencies.Hilt.kapt)
+    implementation(projects.core.common)
+    implementation(projects.core.ui)
+    implementation(projects.core.designsystem)
+    implementation(projects.core.data)
+    implementation(projects.core.model)
+//    implementation(projects.core.analytics)
+//    implementation(projects.sync.work)
 
-    // Debug Implementation
-    debugImplementation(Dependencies.Chucker.debugImplementation)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.core.splashscreen)
+    implementation(libs.androidx.tracing.ktx)
+    implementation(libs.androidx.lifecycle.runtimeCompose)
+    implementation(libs.androidx.compose.runtime.tracing)
+    implementation(libs.androidx.compose.material3.windowSizeClass)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.profileinstaller)
+    implementation(libs.kotlinx.coroutines.guava)
+    implementation(libs.coil.kt)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.material)
+    implementation(libs.constraintlayout)
 
-    // Release Implementation
-    releaseImplementation(Dependencies.Chucker.releaseImplementation)
+//    debugImplementation(libs.androidx.compose.ui.testManifest)
+//    debugImplementation(projects.uiTestHiltManifest)
 
-    // Android Test Implementation
-    androidTestImplementation(Dependencies.AndroidX.Test.androidTestImplementation)
-    androidTestImplementation(Dependencies.JUnit.androidTestImplementation)
+    kspTest(libs.hilt.compiler)
+
+//    testImplementation(projects.core.dataTest)
+//    testImplementation(projects.core.testing)
+//    testImplementation(libs.accompanist.testharness)
+//    testImplementation(libs.hilt.android.testing)
+//    testImplementation(libs.work.testing)
+
+//    testDemoImplementation(libs.robolectric)
+//    testDemoImplementation(libs.roborazzi)
+
+//    androidTestImplementation(projects.core.testing)
+//    androidTestImplementation(projects.core.dataTest)
+//    androidTestImplementation(projects.core.datastoreTest)
+//    androidTestImplementation(libs.androidx.navigation.testing)
+//    androidTestImplementation(libs.accompanist.testharness)
+//    androidTestImplementation(libs.hilt.android.testing)
+
+//    baselineProfile(projects.benchmarks)
 }
 
-configure<com.diffplug.gradle.spotless.SpotlessExtension> {
-    kotlin {
-        ktlint()
-    }
-    kotlinGradle {
-        target("*.gradle.kts")
-        ktlint()
-    }
+baselineProfile {
+    // Don't build on every iteration of a full assemble.
+    // Instead enable generation directly for the release build variant.
+    automaticGenerationDuringBuild = false
+}
+
+dependencyGuard {
+    configuration("prodReleaseRuntimeClasspath")
 }
